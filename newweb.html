@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>待辦清單</title>
+    <style>
+      /* 設定背景圖 */
+      body {
+        background-image: url("background.jpg");
+        background-size: cover;
+      }
+      /* 設定新增按鈕樣式 */
+      button {
+        background-color: blue;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>待辦清單</h1>
+    <form>
+      <label for="new-item">新增項目：</label>
+      <input type="text" id="new-item" name="new-item">
+      <!-- 修改新增按鈕樣式 -->
+      <button type="button" onclick="addItem()">新增</button>
+    </form>
+    <ul id="item-list">
+      <!-- 待辦清單項目會在這裡動態產生 -->
+    </ul>
+    <script>
+      // 待辦清單項目的數組
+      let items = [];
+
+      // 新增項目
+      function addItem() {
+        // 取得新增項目的輸入框
+        const newItemInput = document.getElementById("new-item");
+        // 取得輸入框中的文字，並去除前後空格
+        const newItemText = newItemInput.value.trim();
+        // 如果文字不為空，則將其加入待辦清單項目數組中
+        if (newItemText !== "") {
+          items.push(newItemText);
+          // 清空輸入框
+          newItemInput.value = "";
+          // 重新渲染待辦清單項目
+          renderItems();
+        }
+      }
+
+      // 移除項目
+      function removeItem(index) {
+        // 從待辦清單項目數組中刪除指定索引的項目
+        items.splice(index, 1);
+        // 重新渲染待辦清單項目
+        renderItems();
+      }
+
+      // 編輯項目
+      function editItem(index) {
+        // 取得指定索引的待辦清單項目文字
+        const itemText = items[index];
+        // 使用 prompt 函數顯示對話框，讓使用者輸入新的項目內容
+        const newItemText = prompt("請輸入新的項目內容：", itemText);
+        // 如果使用者輸入了新的內容，則更新待辦清單項目數組中的對應項目
+        if (newItemText !== null && newItemText.trim() !== "") {
+          items[index] = newItemText.trim();
+          // 重新渲染待辦清單項目
+          renderItems();
+        }
+      }
+
+      // 渲染待辦清單項目
+      function renderItems() {
+        // 取得待辦清單項目列表的元素
+        const itemList = document.getElementById("item-list");
+        // 清空列表中的所有子元素
+        itemList.innerHTML = "";
+        // 遍歷待辦清單項目數組，為每個項目創建一個 li 元素，並加入到列表中
+        items.forEach((item, index) => {
+          const li = document.createElement("li");
+          const textNode = document.createTextNode(item);
+          // 創建移除按鈕，並設定點擊事件處理函數
+          const removeButton = document.createElement("button");
+          removeButton.textContent = "移除";
+          removeButton.onclick = () => removeItem(index);
+          // 創建編輯按鈕，並設定點擊事件處理函數
+          const editButton = document.createElement("button");
+          editButton.textContent = "編輯";
+          editButton.onclick = () => editItem(index);
+          //          // 將文字、移除按鈕和編輯按鈕加入到 li 元素中
+          li.appendChild(textNode);
+          li.appendChild(removeButton);
+          li.appendChild(editButton);
+          // 將 li 元素加入到待辦清單項目列表中
+          itemList.appendChild(li);
+        });
+      }
+
+      // 初始化，渲染待辦清單項目
+      renderItems();
+    </script>
+  </body>
+</html>
